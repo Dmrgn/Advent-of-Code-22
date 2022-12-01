@@ -1,0 +1,28 @@
+Import <| "std.Print"
+Import <| "std.Sort"
+Import <| "std.Sum"
+Import <| "std.Difference"
+
+PureAssign <| (data, ((1000,2000,3000),(4000),(5000,6000),(7000,8000,9000),(10000)))
+
+// comparator function for sorting
+Fun <| (Comp, (a, b), [
+    (b, a) |> Difference |> Return
+])
+
+// sum the calories of each elf
+ImpureAssign <| (sums, [For <| (data, (elf), [
+    ImpureAssign <| (sum, 0)
+    For <| (elf, (item), [
+        Mutate <| (sum, Sum <| (sum, item))
+    ])
+    sum |> Return
+])])
+
+// sort the array
+PureAssign <| (sorted, (sums, Comp) |> Sort)
+
+// print the sum of the first 3 elements of the array
+For <| (3, (x), {
+    (sorted, x) |> Index |> Return
+}) |> Sum |> Print
