@@ -1,0 +1,69 @@
+Import <| "std"
+
+PureAssign <| (data, (("A","Y"),("B","X"),("C","Z")))
+
+Fun <| (Score, (moves), {
+    // maps A to 1, B to 2, C to 3
+    Fun <| (MoveScore, (letter), {
+        If <| (EqualTo <| (letter, "X"), {
+            (1) |> Return
+        }, {
+            If <| (EqualTo <| (letter, "Y"), {
+                (2) |> Return
+            }, {
+                (3) |> Return
+            }) |> Return
+        }) |> Return
+    })
+    Fun <| (WinningLetter, (letter), {
+        If <| (EqualTo <| (letter, "A"), {
+            ("Y") |> Return
+        }, {
+            If <| (EqualTo <| (letter, "B"), {
+                ("Z") |> Return
+            }, {
+                ("X") |> Return
+            }) |> Return
+        }) |> Return
+    })
+    Fun <| (Tie, (letter), {
+        If <| (EqualTo <| (letter, "A"), {
+            ("X") |> Return
+        }, {
+            If <| (EqualTo <| (letter, "B"), {
+                ("Y") |> Return
+            }, {
+                ("Z") |> Return
+            }) |> Return
+        }) |> Return
+    })
+    Fun <| (Loss, (letter), {
+        If <| (EqualTo <| (letter, "A"), {
+            ("Z") |> Return
+        }, {
+            If <| (EqualTo <| (letter, "B"), {
+                ("X") |> Return
+            }, {
+                ("Y") |> Return
+            }) |> Return
+        }) |> Return
+    })
+    ((moves, 0) |> Index, (moves, 0) |> Index |> WinningLetter) |> Print
+    // if we win
+    If <| (EqualTo <| ((moves, 1) |> Index, "Z"), {
+        // win
+        ((moves, 0) |> Index |> WinningLetter |> MoveScore, 6) |> Sum |> Return
+    }, {
+        If <| (EqualTo <| ((moves, 1) |> Index, "Y"), {
+            // tie
+            ((moves, 0) |> Index |> Tie |> Print |> MoveScore, 3) |> Sum |> Return
+        }, {
+            // loss
+            ((moves, 0) |> Index |> Print |> Loss |> Print |> MoveScore) |> Return
+        }) |> Return
+    }) |> Return
+})
+
+(data, Fun <| (Lambda, (prev, current, index), {
+    (current |> Score |> Print, prev) |> Sum |> Return
+}), 0) |> Reduce |> Print
