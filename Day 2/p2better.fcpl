@@ -1,0 +1,36 @@
+Import <| "std"
+
+PureAssign <| (data, (("A","Y"),("B","X"),("C","Z")))
+
+PureAssign <| (amap, ("A","B","C"))
+PureAssign <| (xmap, ("X","Y","Z"))
+
+Fun <| (IndexOf, (arr, letter), {
+    (arr, Fun <| (Lambda, (prev, cur, index), {
+        If <| (EqualTo <| (cur, letter), {
+            index |> Return
+        }, {
+            prev |> Return
+        }) |> Return
+    }), -1) |> Reduce |> Return
+})
+
+Fun <| (Score, (moves), {
+    // if we win
+    If <| (EqualTo <| ((moves, 1) |> Index, "Z"), {
+        // win
+        ((((amap, (moves, 0) |> Index) |> IndexOf, 1) |> Sum, 3) |> Modulo, 7) |> Sum |> Return
+    }, {
+        If <| (EqualTo <| ((moves, 1) |> Index, "Y"), {
+            // tie
+            ((((amap, (moves, 0) |> Index) |> IndexOf, 3) |> Sum, 3) |> Modulo, 4) |> Sum |> Return
+        }, {
+            // loss
+            ((((amap, (moves, 0) |> Index) |> IndexOf, 2) |> Sum, 3) |> Modulo, 1) |> Sum |> Return
+        }) |> Return
+    }) |> Return
+})
+
+(data, Fun <| (Lambda, (prev, current, index), {
+    (current |> Score, prev) |> Sum |> Return
+}), 0) |> Reduce |> Print

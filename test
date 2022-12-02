@@ -1,0 +1,122 @@
+let data = true,
+    amap = true,
+    xmap = true,
+    arr = null,
+    letter = null,
+    moves = null,
+    prev = null,
+    current = null,
+    index = null;
+let IndexOf = true,
+    Score = true,
+    Lambda = true;
+let __if_result_ = null;
+let __loop_result_ = null;
+const Concat = function () {
+    let args = [...arguments];
+    const a = args.shift();
+    return a.concat(...args)
+};
+const Difference = function () {
+    const args = [...arguments].flat();
+    let t = args.shift();
+    args.forEach((arg => {
+        t -= arg
+    }));
+    return t
+};
+const Exponent = function () {
+    const args = [...arguments].flat();
+    return args[0] ** args[1]
+};
+const Join = function () {
+    const a = [...arguments];
+    return a[0].join(a[1])
+};
+const Modulo = function () {
+    const args = [...arguments].flat();
+    return args[0] % args[1]
+};
+const Print = function () {
+    console.log(...arguments);
+    return arguments.length > 1 ? arguments : arguments[0]
+};
+const Product = function () {
+    let t = 1;
+    [...arguments].flat().forEach((arg => {
+        t *= arg
+    }));
+    return t
+};
+const Quotient = function () {
+    const args = [...arguments].flat();
+    let t = args.shift();
+    args.forEach((arg => {
+        t /= arg
+    }));
+    return t
+};
+const Reduce = function () {
+    let a = [...arguments];
+    return a[0].reduce(a[1], a[2])
+};
+const Reverse = function () {
+    return [...arguments].flat().reverse()
+};
+const Sort = function () {
+    let a = [...arguments];
+    return a[1] == 0 ? a[0].sort() : a[0].sort(a[1])
+};
+const Sum = function () {
+    let t = 0;
+    [...arguments].flat().forEach((arg => {
+        t += arg
+    }));
+    return t
+};
+data = [
+    ["A", "Y"],
+    ["B", "X"],
+    ["C", "Z"]
+];
+amap = ["A", "B", "C"];
+xmap = ["X", "Y", "Z"];
+IndexOf = function (arr, letter) {
+    let prev = null,
+        cur = null,
+        index = null;
+    let Lambda = true;
+    return Reduce(arr, Lambda = function (prev, cur, index) {
+        return __if_result_ = function () {
+            if (cur == letter) {
+                return index;
+                return true
+            } else {
+                return prev;
+                return false
+            }
+        }()
+    }, -1)
+};
+Score = function (moves) {
+    return __if_result_ = function () {
+        if (moves[1] == "Z") {
+            return Sum(Modulo(Sum(IndexOf(amap, moves[0]), 1), 3), 7);
+            return true
+        } else {
+            return __if_result_ = function () {
+                if (moves[1] == "Y") {
+                    return Sum(Modulo(Sum(IndexOf(amap, moves[0]), 3), 3), 4);
+                    return true
+                } else {
+                    return Sum(Modulo(Sum(IndexOf(amap, moves[0]), 2), 3), 1);
+                    return false
+                }
+            }();
+            return false
+        }
+    }()
+};
+Print(Reduce(data, Lambda = function (prev, current, index) {
+    return Sum(Score(current), prev)
+}, 0));
