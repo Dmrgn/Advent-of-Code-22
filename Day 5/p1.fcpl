@@ -1,0 +1,90 @@
+Import <| "std"
+
+// return the array without the last item
+Fun <| (Pop, (arr), {
+    PureAssign <| (arrLength, ((arr, "length") |> Property, 1) |> Difference)
+    For <| (arrLength, (x), {
+        (arr, x) |> Index |> Return
+    }) |> Return
+})
+
+// return the array with the specified item appended to the end
+Fun <| (Push, (arr, item), {
+    PureAssign <| (arrLength, ((arr, "length") |> Property, 1) |> Sum)
+    For <| (arrLength, (x), {
+        If <| (EqualTo <| (x, (arrLength, 1) |> Difference), {
+            item |> Return
+        }, {
+            (arr, x) |> Index |> Return
+        }) |> Return
+    }) |> Return
+})
+
+PureAssign <| (startCrates, (
+    ("Z", "N"),
+    ("M", "C", "D"),
+    ("P")
+))
+
+PureAssign <| (startInsts, ((
+    (1,2,1),
+    (3,1,3),
+    (2,2,1),
+    (1,1,2)
+)) |> Reverse)
+
+Fun <| (runInsts, (insts, crates), {
+    PureAssign <| (inst, (insts, ((insts, "length") |> Property, 1) |> Difference) |> Index) // top item of insts
+    PureAssign <| (numItems, (inst, 0) |> Index)
+    PureAssign <| (from, ((inst, 1) |> Index, 1) |> Difference)
+    PureAssign <| (to, ((inst, 2) |> Index, 1) |> Difference)
+
+    Fun <| (replaceIndex, (arr, index, value), {
+        For <| (arr, (x, i), {
+            If <| (EqualTo <| (i, index), {
+                value |> Return
+            }, {
+                (arr, i) |> Index |> Return
+            }) |> Return
+        }) |> Return
+    })
+    Fun <| (settleStacks, (i, movedCrates), {
+        If <| (EqualTo <| (i, 0), {
+            movedCrates |> Return
+        }, {
+            PureAssign <| (fromArr, (movedCrates, from) |> Index)
+            PureAssign <| (toArr, (movedCrates, to) |> Index)
+            // add top item of fromArr to toArr 
+            PureAssign <| (withTo, (movedCrates, to, (
+                toArr,  (
+                            fromArr, ((fromArr, "length") |> Property, 1) |> Difference
+                        ) |> Index
+            ) |> Push) |> replaceIndex)
+            // remove top item of fromArr
+            ((i, 1) |> Difference, (
+                withTo, from, (fromArr) |> Pop
+            ) |> replaceIndex) |> settleStacks |> Return
+        }) |> Return
+    })
+    PureAssign <| (newCrates, settleStacks <| (numItems, crates))
+
+    If <| (Not <| (EqualTo <| ((insts, "length") |> Property, 1)), {
+        (Pop <| (insts), newCrates) |> runInsts |> Return
+    }, {
+        newCrates |> Return
+    }) |> Return
+})
+
+Fun <| (topOfStacks, (stacks), {
+    (For <| (stacks, (x), {
+        (
+            x,
+            (
+                (x, "length") |> Property,
+                1
+            ) |> Difference
+        ) |> Index |> Return
+    }), "") |> Join |> Return
+})
+
+(startInsts, startCrates) |> runInsts |> topOfStacks |> Print
