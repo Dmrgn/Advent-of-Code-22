@@ -10,3 +10,4 @@ Solutions by programming language:
 - Day 3 [CoffeeScript](https://github.com/jashkenas/coffeescript)
 - Day 4 Python 🙄
 - Day 5 [fcpl](https://github.com/dmrgn/fcpl)
+- Day 6 C
